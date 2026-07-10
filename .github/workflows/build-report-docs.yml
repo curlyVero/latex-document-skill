@@ -1,0 +1,25 @@
+name: Build revised report documents
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install python-docx
+      - name: Build Word documents
+        run: python tmp_build_report_docs.py
+      - name: Upload Word documents
+        uses: actions/upload-artifact@v4
+        with:
+          name: revised-report-documents
+          path: output/*.docx
+          retention-days: 1
