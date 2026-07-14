@@ -15,12 +15,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install python-docx
+      - run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
+      - run: pip install python-docx pillow
       - run: python build_cn111142134b_quality.py
+      - run: python add_claim_tree_to_cn111142134b.py
       - name: Commit generated Word document
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/*.docx
-          git commit -m "Generate CN111142134B patent quality evaluation [skip ci]" || exit 0
+          git add output/*.docx output/*.png
+          git commit -m "Generate CN111142134B patent quality evaluation with claim diagram [skip ci]" || exit 0
           git push origin HEAD:${{ github.head_ref }}
